@@ -1,0 +1,35 @@
+<div [ngClass]="{'togglesidebar': msgFromParent1}">
+    <br>
+    <a id="btndashboard" *ngIf="!msgFromParent1" routerLink="/dashboard" routerLinkActive="pctive"
+        [routerLinkActiveOptions]="{ exact: true }" class="sidebar-link sidebar-menu mb-1">Dashboard</a>
+    <a id="btnclient" *ngIf="!msgFromParent1" routerLink="/setting" routerLinkActive="pctive"
+        [routerLinkActiveOptions]="{ exact: true }" class="sidebar-link sidebar-menu mb-1">Settings</a>
+    <a id="btnclient" *ngIf="!msgFromParent1" routerLink="/channel" routerLinkActive="pctive"
+        [routerLinkActiveOptions]="{ exact: true }" class="sidebar-link sidebar-menu mb-1">Channel</a>
+    <!-- <div class="dropable sidebar-link sidebar-menu" *ngIf="!msgFromParent1" (click)="isExpanded=!isExpanded">
+        <div class="css-xdiy5h">Channel</div>
+        <span class="material-icons">{{ isExpanded == true ? 'chevron_right' : 'expand_more' }}</span>
+    </div>
+
+
+    <div [ngClass]="{'show' : !isExpanded}" class="dropdown-menu dropdown-menu-end dropdown-submenu">
+        <div class="dropdown dropstart dropdown-submenu">
+            <a routerLink="/channel" routerLinkActive="pctive" [routerLinkActiveOptions]="{ exact: true }"
+                class="dropdown-item">
+                <mat-icon aria-hidden="false" aria-label="user" class="link_icon">person</mat-icon>
+                <span class="label spantext">Join</span>
+            </a> -->
+            <!-- <a routerLink="/admin/role/list" routerLinkActive="pctive" [routerLinkActiveOptions]="{ exact: true }"
+                class="dropdown-item">
+                <mat-icon aria-hidden="false" aria-label="role" class="link_icon">manage_accounts</mat-icon>
+                <span class="label spantext">Leave</span>
+            </a>
+            <a routerLink="/admin/permission/list" routerLinkActive="pctive" [routerLinkActiveOptions]="{ exact: true }"
+                class="dropdown-item">
+                <mat-icon aria-hidden="false" aria-label="permission" class="link_icon">view_module</mat-icon>
+                <span class="label spantext">Generate Link</span>
+            </a> -->
+        <!-- </div>
+    </div> -->
+
+</div>

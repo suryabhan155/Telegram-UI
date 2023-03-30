@@ -1,0 +1,48 @@
+<button mat-dialog-close class="close-button">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<h2 mat-dialog-title class="text-center">{{ title }}</h2>
+
+<mat-divider></mat-divider>
+<br>
+
+<form  [formGroup]="linkform">
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-8 col-xs-8 mx-auto">
+                <input type="hidden" formControlName="id">
+                <!-- <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="rdoExpirydate" id="rdoExpirydate" value="rdoExpirydate" formControlName="rdoExpirydate">
+                        <label class="form-check-label" for="rdoExpirydate">Expire Date</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="rdoUserlimit" id="rdoUserlimit" value="rdoUserlimit" formControlName="rdoUserlimit">
+                        <label class="form-check-label" for="rdoUserlimit">User Limit</label>
+                    </div>
+                </div> -->
+                <div class="filledcontrol">
+                    <label for="title" class="form-label">Title :</label>
+                    <input type="text" class="form-control" placeholder="Please enter link title" formControlName="title">
+                </div>
+                <div class="filledcontrol">
+                    <label for="expirydate" class="form-label">Expire Date :</label>
+                    <!-- <input type="date" class="form-control" placeholder="Please enter the expirydate" formControlName="expirydate"> -->
+
+                        <input type="date" class="form-control" placeholder="please select the end date" id="expirydate"
+                            formControlName="expirydate">
+                </div>
+                <div class="filledcontrol">
+                    <label for="usagelimit" class="form-label">Usage Limit :</label>
+                    <input class="form-control" placeholder="Please enter the usagelimit" formControlName="usagelimit">
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="row col-8 mb-3" style="margin-left: auto !important; margin-right: 20px;">
+        <button mat-raised-button class="col-md-4 col-lg-4  mat-accent btn_inactive" (click)="cancel()">Cancel</button>
+        <button mat-raised-button class="col-md-3 col-lg-3 btn_active" color="primary" (click)="create()">Save</button>
+    </mat-dialog-actions>
+    <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+</form>

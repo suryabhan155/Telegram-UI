@@ -1,0 +1,1 @@
+class Lightbox{constructor(){"undefined"!=typeof baguetteBox?this._initLightboxes():console.error("[CS] baguetteBox is undefined.")}_initLightboxes(){baguetteBox.run(".gallery"),baguetteBox.run(".lightbox"),baguetteBox.run(".gallery-fadeIn",{animation:"fadeIn"})}}

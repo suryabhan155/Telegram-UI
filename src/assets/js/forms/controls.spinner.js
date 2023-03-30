@@ -1,0 +1,1 @@
+class SpinnerControls{constructor(){jQuery().spinner?(this._initQuantitySpinner(),this._initRest()):console.log("spinner is null!")}_initQuantitySpinner(){$("#spinnerQuantity").spinner()}_initRest(){}}

@@ -1,0 +1,1 @@
+class ComponentsCards{constructor(){"undefined"!=typeof Masonry?this._initMasonry():console.error("[CS] Masonry is undefined.")}_initMasonry(){if("undefined"!=typeof Masonry&&document.getElementById("masonryCardsExample"))new Masonry("#masonryCardsExample",{itemSelector:".col",percentPosition:!0,transitionDuration:0})}}

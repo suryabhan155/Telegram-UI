@@ -1,0 +1,50 @@
+<main class="maincontentarea">
+    <div class="fluid-container">
+        <div class="row">
+            <div class="col">
+                <div class="page-title-container">
+                    <div class="row">
+                        <div class="col-12 col-md-7">
+                            <h1 class="mb-1 pb-0 display-4" id="title">Settings</h1>
+                            <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                                <ul class="breadcrumb pt-0">
+                                    <li class="breadcrumb-item"><a routerLink="/client/dashboard">settings</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div>
+                        <label class="small-title" style="text-align: center;">Insert Code</label>
+                    </div>
+                    <div class="card mb-5" style="width: 55%;margin-left: auto; margin-right: auto;">
+                        <div class="card-body">
+                            <form class="row g-3 tooltip-end-top" [formGroup]="modelform" novalidate autocomplete="off">
+                                <div class="filledcontrol">
+                                    <label for="code" class="form-label">Code :<span required class="required-asterisk"
+                                            [formGroup]="modelform" controlName="'code'"></span></label>
+                                    <input class="form-control" placeholder="Please enter the code" formControlName="code"
+                                        [class.is-invalid]="f['code'].invalid && (f['code'].touched || (f['code'].untouched && show))">
+                                    <div *ngIf="f['code'].invalid && (f['code'].touched || (f['code'].untouched && show))">
+                                        <small *ngIf="f['code'].errors['required']" class="text-danger">Code is required</small>
+                                    </div>
+                                </div>
+            
+                                <div class="d-grid gap-2 col-1 mx-auto">
+                                    <button class="btn btn-primary" (click)="onSave()">
+                                        Verify Code
+                                    </button>
+                                </div>
+            
+                                <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

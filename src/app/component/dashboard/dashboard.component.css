@@ -1,0 +1,11 @@
+.heading{
+    background-color: orange;
+    height: 83px;
+    width: 100%;
+    padding: 6px;
+    margin: auto;
+  }
+  .h2style{
+    font-size:3.5em!important;
+    text-align: center;
+  }

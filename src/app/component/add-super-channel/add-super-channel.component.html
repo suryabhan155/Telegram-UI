@@ -1,0 +1,58 @@
+<main class="maincontentarea">
+    <div class="fluid-container">
+        <div class="row">
+            <div class="col">
+                <div class="page-title-container">
+                    <div class="row">
+                        <div class="col-12 col-md-7">
+                            <h1 class="mb-1 pb-0 display-4" id="title">Add Super Group</h1>
+                            <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                                <ul class="breadcrumb pt-0">
+                                    <li class="breadcrumb-item"><a routerLink="/addsupergroup">Super Group</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-12">
+                    <div>
+                        <label class="small-title" style="text-align: center;">Add Super Group</label>
+                    </div>
+                    <div class="card mb-5" style="width: 55%;margin-left: auto; margin-right: auto;">
+                        <div class="card-body">
+                            <form class="row g-3 tooltip-end-top" [formGroup]="modelform" novalidate autocomplete="off">
+                                <div class="filledcontrol">
+                                    <label for="title" class="form-label">Title :<span required class="required-asterisk"
+                                            [formGroup]="modelform" controlName="'title'"></span></label>
+                                    <input class="form-control" placeholder="Please enter the title" formControlName="title"
+                                        [class.is-invalid]="f['title'].invalid && (f['title'].touched || (f['title'].untouched && show))">
+                                    <div *ngIf="f['title'].invalid && (f['title'].touched || (f['title'].untouched && show))">
+                                        <small *ngIf="f['title'].errors['required']" class="text-danger">Title is required</small>
+                                    </div>
+                                </div>
+                                <div class="filledcontrol">
+                                    <label for="about" class="form-label">Description :<span required class="required-asterisk"
+                                            [formGroup]="modelform" controlName="'about'"></span></label>
+                                    <input class="form-control" placeholder="Please enter the description" formControlName="about"
+                                        [class.is-invalid]="f['about'].invalid && (f['about'].touched || (f['about'].untouched && show))">
+                                    <div *ngIf="f['about'].invalid && (f['about'].touched || (f['about'].untouched && show))">
+                                        <small *ngIf="f['about'].errors['required']" class="text-danger">Description is required</small>
+                                    </div>
+                                </div>
+            
+                                <div class="d-grid gap-2 col-1 mx-auto">
+                                    <button  class="btn btn-primary" (click)="onSave()">
+                                        Save
+                                    </button>
+                                </div>
+            
+                                <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

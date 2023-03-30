@@ -1,0 +1,101 @@
+<div class="col">
+    <div class="page-title-container">
+        <div class="row">
+
+            <div class="col-12 col-md-7">
+                <h1 class="mb-1 pb-0 display-4" id="title">Channel</h1>
+                <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                    <ul class="breadcrumb pt-0" style="font-size: 15px;">
+                        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/channel">Channel</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-body h-100">
+            <div class="col-12 col-lg-12">
+                <div style="padding-bottom: 25px;">
+                    <label class="small-title">Channel List</label>
+                    <button type="button" class="btn btn-primary ms-2 mb-2" style="float: right;"
+                        (click)="CreateChannel()">Create Channel</button>
+                    <button type="button" class="btn btn-primary mb-2" style="float: right;"
+                        (click)="CreateSuperGroup()">Create SuperGroup</button>
+                </div>
+                <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12">
+                        <table mat-table [dataSource]="dataSource">
+
+                            <tr class="mat-row text-center mt-2" *matNoDataRow>
+                                <td class="mat-cell" colspan="9999">
+                                    <h4>No records found</h4>
+                                </td>
+                              </tr>
+                              
+                            <ng-container matColumnDef="Sr.No">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> SN. </th>
+                                <td mat-cell *matCellDef="let element;let i = index">{{ (currentPage *
+                                    pageSize) + (i +
+                                    1) }}</td>
+                            </ng-container>
+                            
+                            <ng-container matColumnDef="Channel">
+                                <th mat-header-cell *matHeaderCellDef width="25%"> Channel Name </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.title }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Type">
+                                <th mat-header-cell *matHeaderCellDef width="15%"> Channel Type </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.type }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="NoofUser">
+                                <th mat-header-cell *matHeaderCellDef width="15%"> Total Users </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.noofuser }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Action">
+                                <th mat-header-cell *matHeaderCellDef width="35%"> Action </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a (click)="CreateGigaGroup(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                        title="Create Giga Groups">GigaGroup</a>
+                                    |
+                                    <a (click)="CreateLink(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                        title="Create And Send Link">CreateSendLink</a>
+                                    |
+                                    <a (click)="JoinLink(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                        title="Join Link">JoinLink</a>
+                                    |
+                                    <!-- <a (click)="AddUser(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                    title="Add User To Channel">AddUser</a>
+                                    |
+                                    <a (click)="LeaveUser(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                    title="Leave User To Channel">RemoveUser</a> -->
+                                    <a (click)="ManageUser(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                    title="Manage Users">Manage User</a>  
+                                    |
+                                    <a (click)="onEdit(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                        title="Update Channel title">Edit</a> |
+                                    <a (click)="onDeleteSelected(element)" class="link">Delete</a>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="selectedRow = selectedRow === row ? null : row"
+                                [ngClass]="{ 'selected': row == selectedRow }" (click)="highlight()"></tr>
+                        </table>
+
+                        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                            [showFirstLastButtons]="true" [length]="totalSize" [pageIndex]="currentPage"
+                            (page)="handlePage($event)" [hidden]="!channelModel?.length">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

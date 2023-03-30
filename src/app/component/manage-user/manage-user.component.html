@@ -1,0 +1,80 @@
+<div class="col">
+    <div class="page-title-container">
+        <div class="row">
+
+            <div class="col-12 col-md-7">
+                <h1 class="mb-1 pb-0 display-4" id="title">Users</h1>
+                <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                    <ul class="breadcrumb pt-0" style="font-size: 15px;">
+                        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/users">User</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-body h-100">
+            <div class="col-12 col-lg-12">
+                <div style="padding-bottom: 25px;">
+                    <label class="small-title">User List</label>
+                    <button type="button" class="btn btn-primary mb-2" style="float: right;"
+                        (click)="AddUser(id)">Add User</button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12">
+                        <table mat-table [dataSource]="dataSource">
+
+                            <tr class="mat-row text-center mt-2" *matNoDataRow>
+                                <td class="mat-cell" colspan="9999">
+                                    <h4>No records found</h4>
+                                </td>
+                              </tr>
+                              <!-- <ng-container matColumnDef="Id">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> <mat-checkbox (click)="$event.stopPropagation()" [checked]="allchecked"></mat-checkbox> </th>
+                                <td mat-cell *matCellDef="let element;">
+                                    <mat-checkbox (click)="$event.stopPropagation()" [checked]="element.id"></mat-checkbox>
+                                </td>
+                            </ng-container> -->
+                            <ng-container matColumnDef="Sr.No">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> SN. </th>
+                                <td mat-cell *matCellDef="let element;let i = index">{{ (currentPage *
+                                    pageSize) + (i +
+                                    1) }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="Username">
+                                <th mat-header-cell *matHeaderCellDef width="30%"> Username</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.username }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="FirstName">
+                                <th mat-header-cell *matHeaderCellDef width="30%"> FirstName</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.first_name }} </td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="IsActive">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> IsActive</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.IsActive }} </td>
+                            </ng-container> -->
+                            <ng-container matColumnDef="Action">
+                                <th mat-header-cell *matHeaderCellDef width="30%"> Action </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a (click)="onDeleteSelected(element)" class="link">Delete</a>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="selectedRow = selectedRow === row ? null : row"
+                                [ngClass]="{ 'selected': row == selectedRow }" (click)="highlight()"></tr>
+                        </table>
+
+                        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                            [showFirstLastButtons]="true" [length]="totalSize" [pageIndex]="currentPage"
+                            (page)="handlePage($event)" [hidden]="!userModel?.length">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

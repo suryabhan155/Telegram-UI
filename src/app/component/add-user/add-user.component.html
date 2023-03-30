@@ -1,0 +1,42 @@
+<button mat-dialog-close class="close-button">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<h2 mat-dialog-title class="text-center">{{ title }}</h2>
+
+<mat-divider></mat-divider>
+<br>
+
+<form  [formGroup]="form">
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-8 col-xs-8 mx-auto">
+                <input type="hidden" formControlName="id">
+                <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rdoPhoneNumber" id="rdoPhoneNumber" value="rdoPhoneNumber" formControlName="rdoPhoneNumber">
+                        <label class="form-check-label" for="rdoPhoneNumber">Phone Number</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rdoUsername" id="rdoUsername" value="rdoUsername" formControlName="rdoUsername">
+                        <label class="form-check-label" for="rdoUsername">User Name</label>
+                    </div>
+                </div>
+                <div class="filledcontrol">
+                    <label for="username" class="form-label">Please enter the value :<span required class="required-asterisk"
+                            [formGroup]="form" controlName="'username'"></span></label>
+                    <input class="form-control" placeholder="Please enter the username" formControlName="username"
+                        [class.is-invalid]="form.controls['username'].invalid && (form.controls['username'].touched || (form.controls['username'].untouched && show))">
+                    <div *ngIf="form.controls['username'].invalid && (form.controls['username'].touched || (form.controls['username'].untouched && show))">
+                        <small *ngIf="form.controls['username'].errors['required']" class="text-danger">Username or phone number is required</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="row col-8 mb-3" style="margin-left: auto !important; margin-right: 20px;">
+        <button mat-raised-button class="col-md-4 col-lg-4  mat-accent btn_inactive" (click)="cancel()">Cancel</button>
+        <button mat-raised-button class="col-md-3 col-lg-3 btn_active" color="primary" (click)="create()">Save</button>
+    </mat-dialog-actions>
+    <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+</form>

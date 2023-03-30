@@ -1,0 +1,1 @@
+class BlogHome{constructor(){this._initGlideCarousel()}_initGlideCarousel(){null!==document.querySelector(".glide-blog")&&"undefined"!=typeof GlideCustom&&new GlideCustom(document.querySelector(".glide-blog"),{gap:0,perView:3,type:"carousel",peek:{before:50,after:50},breakpoints:{1e3:{perView:1},1600:{perView:2},2560:{perView:3}}},!0).mount()}}
