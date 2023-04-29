@@ -1,0 +1,27 @@
+<button  class="close-button mat-dialog-close">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<h2 mat-dialog-title class="text-center">{{ title }}</h2>
+
+<mat-divider></mat-divider>
+<br>
+
+<form>
+    <mat-dialog-content>
+        <div class="row">
+            <input type="hidden" formControlName="id">
+            <div class="col-md-10 col-xs-10 mx-auto" *ngFor="let invite of RequestJoin">
+                
+                <div class="filledcontrol">
+                    <label for="first_name" class="form-label" (click)="getInfo(invite)">{{invite.first_name}} {{invite.last_name}}</label>
+                </div>
+                <div class="filledcontrol">
+                    <label for="message" class="form-label">{{invite.message}}</label>
+                </div>
+                <button mat-raised-button class="col-md-4 col-lg-4 mat-accent btn_inactive me-2" (click)="Dismiss(invite)">Dismiss</button>
+                <button mat-raised-button class="col-md-5 col-lg-5 btn_active" color="primary" (click)="AddtoChannel(invite)">Add To Channel</button>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+</form>

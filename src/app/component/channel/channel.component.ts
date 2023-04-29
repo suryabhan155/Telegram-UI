@@ -8,6 +8,8 @@ import { TelegramService } from 'src/app/services/telegram.service';
 import { DeleteChannelComponent } from '../delete-channel/delete-channel.component';
 import { ManageLinkComponent } from '../manage-link/manage-link.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { RequestJoinComponent } from '../request-join/request-join.component';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-channel',
@@ -24,104 +26,47 @@ export class ChannelComponent {
   message : string;
   closetoast : boolean;
   displayedColumns: string[] = ['Sr.No','Channel','Type','NoofUser', 'Action'];
-  public channelList : channelList[] = [];
   public channelModel : channelModel[] = [];
-  public channelModel1 : channelModel1[] = [];
-  dataSource = new MatTableDataSource(this.channelModel);
+  dataSource = new MatTableDataSource(this.common.chlist);
   selectedRow: any;
   editmode = false;
+  IsRequestJoin : boolean = false;
 
   constructor(private router : Router,
-              private route : ActivatedRoute,
-              private services : TelegramService,
-              private ngxService: NgxUiLoaderService,
-              private dialog: MatDialog) {
-              
-            }
+    private route : ActivatedRoute,
+    private services : TelegramService,
+    private ngxService: NgxUiLoaderService,
+    private dialog: MatDialog,
+    private common : CommonService) {
+    
+  }
   async ngOnInit(): Promise<void> {
-      // var result = await this.services.getChannellist().toPromise().then(async (x)=>{
-      //     this.channelList = x;
-      //     for (const k in this.channelList) { 
-      //       const v :any = this.channelList[k]; 
-      //       console.log(v);
-      //       this.channelModel.push(v);
-      //       await this.services.getChannelInfo(v.id).subscribe(p=>{
-      //         var model : channelModel1={
-      //           channelModel:v,
-      //           type: "",
-      //           noofuser: ""
-      //         }
-      //         this.channelModel1.push(model);
-      //       })
-      //     }
-      //   });
+    if(this.common.chlist.length == 0){
       this.ngxService.start();
-      var result = await this.services.getChannellist().toPromise().then(async (x)=>{
-        this.channelModel = x;
-        this.ngxService.stop()
-      });
-      this.dataSource = new MatTableDataSource(this.channelModel);
-      
-      this.dataSource.paginator = this.paginator;
-      this.array = result;
-      this.totalSize = this.array.length;
-      this.iterator();
+        await this.services.getChannellist().toPromise().then(async (x)=>{
+          if(x.success){
+            this.channelModel = x.data;
+            this.common.chlist = x.data;
+          }else{
+            this.message = x.message;
+            setTimeout(async () => {
+              this.message = "";
+              await this.ngOnInit();
+            }, 1000);
+          }
+          this.ngxService.stop()
+        });
+    }
+    debugger;
+    this.dataSource = new MatTableDataSource(this.common.chlist);
+    this.dataSource.paginator = this.paginator;
+    this.array = this.common.chlist;
+    this.totalSize = this.array.length;
+    this.iterator();
   }
 
   onEdit(value: any): void{
-    this.router.navigate(['addchannel/' + value.clientId]);
-  }
-  async CreateLink(value : any){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = '480px';
-
-    if (value.id) {
-      dialogConfig.data = {
-        id: value.id
-      };
-    }
-
-    const dialogRef = this.dialog.open(ManageLinkComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      async (data) => {
-        try
-        {
-          let currentDate = new Date().toJSON().slice(0, 10);
-          var model : link = {
-            title :data.title,
-            usage_limit : data.usagelimit,
-            legacy_revoke_permanent : false,
-            request_needed : false,
-            expire_Date : data.expirydate,
-            createdDate : currentDate,
-            link : null,
-            Id : 0,
-            channelId : data.id
-          }
-          await this.services.createLink(model).toPromise().then(async x=>{
-            console.log(x);
-            //if(x.status == 200){
-              //await this.services.getlinkandSend(value.id).toPromise().then(c=>{
-                //console.log(c);
-                this.message = "Link is: "+ x;
-                setTimeout(async () => {
-                  this.message = "";
-                },5000);
-              // }).catch(p=>
-              // {
-              //   console.log(p);
-              // });
-            //}
-          }).catch(err=>{
-            console.log(err);
-          })
-        } catch (e) {
-
-        }
-      }
-  );
+    this.router.navigate(['addchannel/' + value.id]);
   }
   async JoinLink(value : any){
     await this.services.joinpublicLink(value.id).toPromise().then(x=>{
@@ -130,45 +75,16 @@ export class ChannelComponent {
       console.log(err);
     })
   }
-  // AddUser(val : any):void{
-  //   try {
-  //     const model : addRemoveUser={
-  //       channelId : val.id,
-  //       user : val.title
-  //     }
-  //     this.services.AddUserToChannel(model).subscribe(
-  //       (res) => {
-  //         this.router.navigate(['channel']);
-  //         },
-  //         (err)=>{
-  //           console.log(err);
-  //         }
-  //       );
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  // }
-  // LeaveUser(val:any): void{
-  //   try {
-  //     const model : addRemoveUser={
-  //       channelId : val.id,
-  //       user : val.title
-  //     }
-  //     this.services.LeftUserToChannel(model).subscribe(
-  //       (res) => {
-  //         this.router.navigate(['channel']);
-  //         },
-  //         (err)=>{
-  //           console.log(err);
-  //         }
-  //       );
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  // }
   ManageUser(val: any){
     try{
       this.router.navigate(['users/'+val.id]);
+    }catch(e){
+
+    }
+  }
+  ManageLink(val: any){
+    try{
+      this.router.navigate(['link/'+val.id]);
     }catch(e){
 
     }
@@ -190,13 +106,22 @@ export class ChannelComponent {
         try {
             this.services.deleteChannel(value.id).subscribe(
               (res) => {
-                this.message = "Channel deleted successfully";
-                setTimeout(async () => {
-                  this.message = "";
-                  window.location.reload();
-                },1000);
+                this.message = res.message;
+                if(res.success){
+                  const index = this.common.chlist.indexOf(value);
+                  if(index >-1){
+                    this.common.chlist.splice(index,1);
+                  }
+                  setTimeout(async () => {
+                    this.message = "";
+                    await this.ngOnInit();
+                  },1000);
+                }else{
+                  setTimeout(() => {
+                    this.message = "";
+                  }, 1000);
                 }
-              );
+              });
             } catch (e) {
 
             }
@@ -210,14 +135,12 @@ export class ChannelComponent {
           this.message = "Gigagroup created successfully";
           setTimeout(async () => {
             this.message = "";
-            window.location.reload();
+            //this.common.chlist.push(val);
           },1000);
           },(err)=>{
-            debugger
             this.message = err;
             setTimeout(async () => {
               this.message = "";
-              window.location.reload();
             },1000);
           }
         );
@@ -228,7 +151,14 @@ export class ChannelComponent {
   CreateSuperGroup(){
     this.router.navigate(['addsuperchannel']);
   }
-  CreateChannel(){
+  CreatePrivateChannel(){
+    localStorage.removeItem('channeltype');
+    localStorage.setItem('channeltype','private');
+    this.router.navigate(['addchannel']);
+  }
+  CreatePublicChannel(){
+    localStorage.removeItem('channeltype');
+    localStorage.setItem('channeltype','public');
     this.router.navigate(['addchannel']);
   }
   highlight(): void {
@@ -250,9 +180,6 @@ export class ChannelComponent {
     this.closetoast = true;
   }
 }
-export class channelList{
-  channelModel: Array<channelModel>;
-}
 export class channelModel {
   isActive: string;
   id: any;
@@ -260,9 +187,6 @@ export class channelModel {
   photo: any;
   type:any;
   noofuser : any;
-}
-export class channelModel1 {
-  channelModel : channelModel;
-  type:any;
-  noofuser : any;
+  IsRequestJoin : boolean;
+  RequestCount : number;
 }

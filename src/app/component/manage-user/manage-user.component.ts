@@ -9,6 +9,8 @@ import { user } from 'src/app/model/user.model';
 import { TelegramService } from 'src/app/services/telegram.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { RemoveUserComponent } from '../remove-user/remove-user.component';
+import { approveReject } from 'src/app/model/approveReject.model';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-manage-user',
@@ -26,32 +28,71 @@ export class ManageUserComponent {
   closetoast : boolean;
   displayedColumns: string[] = ['Sr.No','Username','FirstName','Action'];
   public userModel : user[] = [];
-  dataSource = new MatTableDataSource(this.userModel);
+  RequestJoin : RequestJoin[] = [];
+  dataSource = new MatTableDataSource(this.RequestJoin);
   selectedRow: any;
   editmode = false;
   allchecked :boolean= false;
+  result : any[] = [];
 
   constructor(private router : Router,
               private route : ActivatedRoute,
               private services : TelegramService,
               private ngxService: NgxUiLoaderService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private common : CommonService) {
               this.route.params.subscribe(res=>{
                 this.id = res['id'];
               })
             }
   async ngOnInit(): Promise<void> {
     this.ngxService.start();
-      var result = await this.services.getAllParticipants(this.id).toPromise().then(async (x)=>{
-        this.userModel = x;
+      await this.services.getAllParticipants(this.id).toPromise().then(async (x)=>{
+        if(x.success){
+            this.services.getwaitinglist(this.id).subscribe(
+              (res) => {
+                if(res.success){
+                  res.data.forEach(element => {
+                    //this.userModel.push(element);
+                    const request : RequestJoin = {
+                      user : element,
+                      isRequest : true
+                    }
+                    this.RequestJoin.push(request)
+                  });
+                  x.data.forEach(element => {
+                    const request : RequestJoin = {
+                      user : element,
+                      isRequest : false
+                    }
+                    this.RequestJoin.push(request)
+                  });
+                  this.result = this.RequestJoin;
+                  this.dataSource = new MatTableDataSource(this.RequestJoin);
+      
+                  this.dataSource.paginator = this.paginator;
+                  this.array = this.RequestJoin;
+                  this.totalSize = this.array.length;
+                  this.iterator();
+                }else{
+                  setTimeout(() => {
+                    this.message = "";
+                  }, 1000);
+                }
+                },
+                (err)=>{
+                  console.log(err);
+                }
+              );
+        }else{
+          this.message = x.message;
+          setTimeout(() => {
+            this.message = "";
+          }, 1000);
+        }
         this.ngxService.stop();
       });
-      this.dataSource = new MatTableDataSource(this.userModel);
-      
-      this.dataSource.paginator = this.paginator;
-      this.array = result;
-      this.totalSize = this.array.length;
-      this.iterator();
+
   }
 
   AddUser(id:any):void{
@@ -78,8 +119,17 @@ export class ManageUserComponent {
           }
           this.services.AddUserToChannel(model).subscribe(
             (res) => {
-              // this.router.navigate(['users/' + this.id]);
-              window.location.reload();
+              this.message = res.message;
+              if(res.success){
+                setTimeout(async () => {
+                  this.message = "";
+                  await this.ngOnInit();
+                }, 1000);
+              }else{
+                setTimeout(() => {
+                  this.message = "";
+                }, 1000);
+              }
               },
               (err)=>{
                 console.log(err);
@@ -111,6 +161,7 @@ export class ManageUserComponent {
     //     console.log(e);
     //   }
   }
+
   async onDeleteSelected(value: any): Promise<void> {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
@@ -132,7 +183,17 @@ export class ManageUserComponent {
               }
               this.services.LeftUserToChannel(model).subscribe(
                 (res) => {
-                    window.location.reload();
+                  if(res.success){
+                    this.message = res.message;
+                    setTimeout(async () => {
+                      await this.ngOnInit();
+                    }, 1000);
+                  }else{
+                    this.message = res.message;
+                    setTimeout(() => {
+                      this.message = "";
+                    }, 1000);
+                  }
                   },
                   (err)=>{
                     console.log(err);
@@ -143,6 +204,71 @@ export class ManageUserComponent {
               }
           }
       );
+  }
+
+  Dismiss(val : any){
+    var model : approveReject = {
+      userId : val.id,
+      channelId : this.id,
+      link : "",
+      approved : false,
+      requested : false
+    }
+    try{
+      this.ngxService.start();
+      this.services.approveRejectChatJoinRequest(model).subscribe(
+        async (res) => {
+          if(res.success){
+            this.RequestJoin = res.data;
+            this.ngxService.stop();
+          }else{
+            setTimeout(() => {
+              this.message = "";
+            }, 1000);
+          }
+          },
+          (err)=>{
+            console.log(err);
+          }
+        );
+      } catch (e) {
+        console.log(e);
+    }
+  }
+  AddtoChannel(val : any){
+    var model : approveReject = {
+      userId : val.id,
+      channelId : this.id,
+      link : "",
+      approved : true,
+      requested : true
+    }
+    try{
+      this.ngxService.start();
+      this.services.approveRejectChatJoinRequest(model).subscribe(
+        async (res) => {
+          if(res.success){
+            this.RequestJoin = res.data;
+            this.common.chlist.forEach(x=>{
+              if(x.id == this.id){
+                x.RequestCount = x.RequestCount-1;
+                x.IsRequestJoin = false; 
+              }
+            });
+            this.ngxService.stop();
+          }else{
+            setTimeout(() => {
+              this.message = "";
+            }, 1000);
+          }
+          },
+          (err)=>{
+            console.log(err);
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
   }
   
   highlight(): void {
@@ -163,4 +289,8 @@ export class ManageUserComponent {
   closeToast(){
     this.closetoast = true;
   }
+}
+export class RequestJoin{
+  user : user;
+  isRequest : boolean;
 }

@@ -24,6 +24,10 @@ import { RemoveUserComponent } from './component/remove-user/remove-user.compone
 import { AddUserComponent } from './component/add-user/add-user.component';
 import { ManageLinkComponent } from './component/manage-link/manage-link.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { CreateLinkComponent } from './component/create-link/create-link.component';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import { DeleteLinkComponent } from './component/delete-link/delete-link.component';
+import { RequestJoinComponent } from './component/request-join/request-join.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +47,10 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     ManageUserComponent,
     RemoveUserComponent,
     AddUserComponent,
-    ManageLinkComponent
+    ManageLinkComponent,
+    CreateLinkComponent,
+    DeleteLinkComponent,
+    RequestJoinComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +62,8 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent],

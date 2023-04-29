@@ -20,7 +20,9 @@
                 <div style="padding-bottom: 25px;">
                     <label class="small-title">Channel List</label>
                     <button type="button" class="btn btn-primary ms-2 mb-2" style="float: right;"
-                        (click)="CreateChannel()">Create Channel</button>
+                        (click)="CreatePrivateChannel()">Create Private Channel</button>
+                    <button type="button" class="btn btn-primary ms-2 mb-2" style="float: right;"
+                        (click)="CreatePublicChannel()">Create Public Channel</button>
                     <button type="button" class="btn btn-primary mb-2" style="float: right;"
                         (click)="CreateSuperGroup()">Create SuperGroup</button>
                 </div>
@@ -36,7 +38,7 @@
                               </tr>
                               
                             <ng-container matColumnDef="Sr.No">
-                                <th mat-header-cell *matHeaderCellDef width="10%"> SN. </th>
+                                <th mat-header-cell *matHeaderCellDef width="7%"> SN. </th>
                                 <td mat-cell *matCellDef="let element;let i = index">{{ (currentPage *
                                     pageSize) + (i +
                                     1) }}</td>
@@ -48,34 +50,31 @@
                             </ng-container>
 
                             <ng-container matColumnDef="Type">
-                                <th mat-header-cell *matHeaderCellDef width="15%"> Channel Type </th>
+                                <th mat-header-cell *matHeaderCellDef width="12%"> Type </th>
                                 <td mat-cell *matCellDef="let element"> {{ element.type }} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="NoofUser">
-                                <th mat-header-cell *matHeaderCellDef width="15%"> Total Users </th>
+                                <th mat-header-cell *matHeaderCellDef width="10%"> Users </th>
                                 <td mat-cell *matCellDef="let element"> {{ element.noofuser }} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="Action">
-                                <th mat-header-cell *matHeaderCellDef width="35%"> Action </th>
+                                <th mat-header-cell *matHeaderCellDef width="45%"> Action </th>
                                 <td mat-cell *matCellDef="let element">
+                                    <!-- <button mat-stroked-button class="btn_active" color="primary" (click)="CreateGigaGroup(element)" title="Create Giga Groups">GigaGroup</button><span> | </span>
+                                    <button mat-stroked-button class="btn_active" color="primary" (click)="ManageLink(element)" title="Manage Link">Manage Link</button><span> | </span>
+                                    <button mat-stroked-button class="btn_active" color="primary" (click)="ManageUser(element)" title="Manage Users">Manage User <span *ngIf="element.isRequestJoin">({{element.requestCount}})</span></button><span> | </span>
+                                    <button mat-stroked-button class="btn_active" color="primary" (click)="onEdit(element)" title="Update Channel title">Edit</button><span> | </span>
+                                    <button mat-stroked-button color="warn" class="mat-accent btn_inactive" (click)="onDeleteSelected(element)">Delete</button> -->
                                     <a (click)="CreateGigaGroup(element)" class="link" data-toggle="tooltip" data-placement="top"
                                         title="Create Giga Groups">GigaGroup</a>
                                     |
-                                    <a (click)="CreateLink(element)" class="link" data-toggle="tooltip" data-placement="top"
-                                        title="Create And Send Link">CreateSendLink</a>
+                                    <a (click)="ManageLink(element)" class="link" data-toggle="tooltip" data-placement="top"
+                                    title="Manage Link">Manage Link</a>  
                                     |
-                                    <a (click)="JoinLink(element)" class="link" data-toggle="tooltip" data-placement="top"
-                                        title="Join Link">JoinLink</a>
-                                    |
-                                    <!-- <a (click)="AddUser(element)" class="link" data-toggle="tooltip" data-placement="top"
-                                    title="Add User To Channel">AddUser</a>
-                                    |
-                                    <a (click)="LeaveUser(element)" class="link" data-toggle="tooltip" data-placement="top"
-                                    title="Leave User To Channel">RemoveUser</a> -->
                                     <a (click)="ManageUser(element)" class="link" data-toggle="tooltip" data-placement="top"
-                                    title="Manage Users">Manage User</a>  
+                                    title="Manage Users">Manage User<span *ngIf="element.isRequestJoin">({{element.requestCount}})</span></a>  
                                     |
                                     <a (click)="onEdit(element)" class="link" data-toggle="tooltip" data-placement="top"
                                         title="Update Channel title">Edit</a> |
@@ -91,7 +90,7 @@
 
                         <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
                             [showFirstLastButtons]="true" [length]="totalSize" [pageIndex]="currentPage"
-                            (page)="handlePage($event)" [hidden]="!channelModel?.length">
+                            (page)="handlePage($event)" [hidden]="!array?.length">
                         </mat-paginator>
                     </div>
                 </div>

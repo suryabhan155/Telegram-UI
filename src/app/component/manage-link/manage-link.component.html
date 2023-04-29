@@ -1,48 +1,81 @@
-<button mat-dialog-close class="close-button">
-    <mat-icon class="close-icon" color="warn">close</mat-icon>
-</button>
-<h2 mat-dialog-title class="text-center">{{ title }}</h2>
-
-<mat-divider></mat-divider>
-<br>
-
-<form  [formGroup]="linkform">
-    <mat-dialog-content>
+<div class="col">
+    <div class="page-title-container">
         <div class="row">
-            <div class="col-md-8 col-xs-8 mx-auto">
-                <input type="hidden" formControlName="id">
-                <!-- <div class="mb-3">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="rdoExpirydate" id="rdoExpirydate" value="rdoExpirydate" formControlName="rdoExpirydate">
-                        <label class="form-check-label" for="rdoExpirydate">Expire Date</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="rdoUserlimit" id="rdoUserlimit" value="rdoUserlimit" formControlName="rdoUserlimit">
-                        <label class="form-check-label" for="rdoUserlimit">User Limit</label>
-                    </div>
-                </div> -->
-                <div class="filledcontrol">
-                    <label for="title" class="form-label">Title :</label>
-                    <input type="text" class="form-control" placeholder="Please enter link title" formControlName="title">
-                </div>
-                <div class="filledcontrol">
-                    <label for="expirydate" class="form-label">Expire Date :</label>
-                    <!-- <input type="date" class="form-control" placeholder="Please enter the expirydate" formControlName="expirydate"> -->
 
-                        <input type="date" class="form-control" placeholder="please select the end date" id="expirydate"
-                            formControlName="expirydate">
+            <div class="col-12 col-md-7">
+                <h1 class="mb-1 pb-0 display-4" id="title">Users</h1>
+                <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                    <ul class="breadcrumb pt-0" style="font-size: 15px;">
+                        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/channel">Channel</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-body h-100">
+            <div class="col-12 col-lg-12">
+                <div style="padding-bottom: 25px;">
+                    <label class="small-title">Link List</label>
+                    <button type="button" class="btn btn-primary mb-2" style="float: right;"
+                        (click)="CreateLink(id)">Create a new Link</button>
                 </div>
-                <div class="filledcontrol">
-                    <label for="usagelimit" class="form-label">Usage Limit :</label>
-                    <input class="form-control" placeholder="Please enter the usagelimit" formControlName="usagelimit">
+                <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12">
+                        <table mat-table [dataSource]="dataSource">
+
+                            <tr class="mat-row text-center mt-2" *matNoDataRow>
+                                <td class="mat-cell" colspan="9999">
+                                    <h4>No records found</h4>
+                                </td>
+                              </tr>
+                            <ng-container matColumnDef="Sr.No">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> SN. </th>
+                                <td mat-cell *matCellDef="let element;let i = index">{{ (currentPage *
+                                    pageSize) + (i +
+                                    1) }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="Link">
+                                <th mat-header-cell *matHeaderCellDef width="30%"> Link</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.link }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="UsageLimit">
+                                <th mat-header-cell *matHeaderCellDef width="14%"> Usage Limit</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.usage_limit }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="ExpiryDate">
+                                <th mat-header-cell *matHeaderCellDef width="14%"> Expiry Date</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.expire_Date | date: 'dd/MM/yyyy' }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Status">
+                                <th mat-header-cell *matHeaderCellDef width="10%"> Status</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Action">
+                                <th mat-header-cell *matHeaderCellDef width="22%"> Action </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a (click)="onCopySelected(element)" class="link">Copy</a> |
+                                    <a (click)="onEditSelected(element)" class="link">Edit</a> |
+                                    <a (click)="onDeleteSelected(element)" class="link">Delete</a>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                (click)="selectedRow = selectedRow === row ? null : row"
+                                [ngClass]="{ 'selected': row == selectedRow }" (click)="highlight()"></tr>
+                        </table>
+
+                        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+                            [showFirstLastButtons]="true" [length]="totalSize" [pageIndex]="currentPage"
+                            (page)="handlePage($event)" [hidden]="!linkModel?.length">
+                        </mat-paginator>
+                    </div>
                 </div>
             </div>
         </div>
-    </mat-dialog-content>
-
-    <mat-dialog-actions class="row col-8 mb-3" style="margin-left: auto !important; margin-right: 20px;">
-        <button mat-raised-button class="col-md-4 col-lg-4  mat-accent btn_inactive" (click)="cancel()">Cancel</button>
-        <button mat-raised-button class="col-md-3 col-lg-3 btn_active" color="primary" (click)="create()">Save</button>
-    </mat-dialog-actions>
-    <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
-</form>
+    </div>
+</div>

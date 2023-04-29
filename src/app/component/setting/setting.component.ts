@@ -52,22 +52,27 @@ export class SettingComponent {
       };
       // stop here if form is invalid
       if (this.modelform.invalid) {
-        this.message = "Some field is not filled, please fill and try again.";
+        this.message = "Code is not supplied";
         setTimeout(async () => {
           this.message = "";
-        },500);
+        },1000);
         return;
       }
-      const result = await this.services.getConfig().toPromise();
-      if (result.status == 200) {
+      const result = await this.services.getConfig(this.f['code'].value).toPromise();
+      debugger
+      //if (result.status == 200) {
         this.router.navigate(['channel']);
-      }
+      //}
       setTimeout(() => {
       //this.router.navigate(['admin/client/list']);
-      },500);
+      },1000);
     }
     catch (ex) {
       console.log(ex);
+      this.message = ex.message;
+      setTimeout(async () => {
+        this.message = "";
+      },1000);
     }
   }
 }

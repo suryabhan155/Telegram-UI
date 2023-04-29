@@ -6,6 +6,7 @@ import { addUser,RemoveUser } from '../model/addRemoveUser.model';
 import { channel } from '../model/channel.model';
 import { Inputchannel } from '../model/Inputchannel.model';
 import { link } from '../model/link.model';
+import { approveReject } from '../model/approveReject.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' ,'Accept': 'application/json'})
@@ -29,8 +30,8 @@ export class TelegramService {
     return this.http.get<any>(this.baseUrl + '/Channel/chatcount').pipe();
   }
   // Channel config
-  public getConfig(): Observable<any> {
-    return this.http.get<any>(this.baseUrl + '/Channel/config').pipe();
+  public getConfig(val:any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + '/Channel/config', JSON.stringify(val),httpOptions).pipe();
   }
   public createChannel(channel: channel): Observable<any> {
     return this.http.post<any>(this.baseUrl + '/Channel/createchannel', JSON.stringify(channel), httpOptions).pipe();
@@ -64,8 +65,8 @@ export class TelegramService {
     return this.http.get<any>(this.baseUrl + '/Channel/getchannelfull/'+id).pipe();
   } 
 
-  public getChannelbyId(id:any): Observable<any> {
-    return this.http.get<any>(this.baseUrl + '/Channel/getchannelbyid'+id).pipe();
+  public getChannelbyId(id:number): Observable<any> {
+    return this.http.post<any>(this.baseUrl + '/Channel/getchannelbyid', JSON.stringify(id), httpOptions).pipe();
   }  
   public updateChannelTitle(channel: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + '/Channel/editchanneltitle',JSON.stringify(channel), httpOptions).pipe();
@@ -80,6 +81,9 @@ export class TelegramService {
   }
   public createLink(model: link): Observable<any> {
     return this.http.post<any>(this.baseUrl + '/Channel/createLink', JSON.stringify(model), httpOptions).pipe();
+  }
+  public editLink(model: link): Observable<any> {
+    return this.http.post<any>(this.baseUrl + '/Channel/editLink', JSON.stringify(model), httpOptions).pipe();
   }
   public getlinkandSend(id: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + '/Channel/getLinkAndSend', JSON.stringify(id), httpOptions).pipe();
@@ -96,13 +100,22 @@ export class TelegramService {
   public getAllParticipants(id:number):Observable<any>{
     return this.http.post<any>(this.baseUrl + '/Channel/getAllParticipants',JSON.stringify(id),httpOptions).pipe();
   }
-  public approveRejectChatJoinRequest(id:number):Observable<any>{
-    return this.http.post<any>(this.baseUrl + '/Channel/approveRejectChatJoinRequest', JSON.stringify(id),httpOptions).pipe();
+  public approveRejectChatJoinRequest(approveReject:approveReject):Observable<any>{
+    return this.http.post<any>(this.baseUrl + '/Channel/approveRejectChatJoinRequest', JSON.stringify(approveReject),httpOptions).pipe();
   }
   public searchUserbyPhone(phone:any):Observable<any>{
     return this.http.post<any>(this.baseUrl + '/Channel/searchuserbyphone', JSON.stringify(phone),httpOptions).pipe();
   }
   public searchUserbyName(name:string):Observable<any>{
     return this.http.post<any>(this.baseUrl + '/Channel/searchuserbyname', JSON.stringify(name),httpOptions).pipe();
+  }
+  public getwaitinglist(id:number):Observable<any>{
+    return this.http.post<any>(this.baseUrl + '/Channel/getwaitinglistuser', JSON.stringify(id),httpOptions).pipe();
+  }
+  public logout():Observable<any>{
+    return this.http.get<any>(this.baseUrl + '/Channel/logout',httpOptions).pipe();
+  }
+  public username() : Observable<any>{
+    return this.http.get<any>(this.baseUrl + '/Channel/username',httpOptions).pipe();
   }
 }

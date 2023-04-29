@@ -8,7 +8,7 @@
                             <h1 class="mb-1 pb-0 display-4" id="title">Add Channel</h1>
                             <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                                 <ul class="breadcrumb pt-0">
-                                    <li class="breadcrumb-item"><a routerLink="/addchannel">Channel</a></li>
+                                    <li class="breadcrumb-item"><a routerLink="/channel">Channel</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -30,6 +30,11 @@
                                     <div *ngIf="f['title'].invalid && (f['title'].touched || (f['title'].untouched && show))">
                                         <small *ngIf="f['title'].errors['required']" class="text-danger">Title is required</small>
                                     </div>
+                                </div>
+                                <div class="filledcontrol" *ngIf="ispublic">
+                                    <label for="username" class="form-label">Username :</label>
+                                    <input class="form-control" placeholder="Please enter the username" formControlName="username"
+                                        [class.is-invalid]="f['username'].invalid && (f['username'].touched || (f['username'].untouched && show))">
                                 </div>
                                 <div class="filledcontrol">
                                     <label for="about" class="form-label">Description :<span required class="required-asterisk"

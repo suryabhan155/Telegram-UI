@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { channel } from 'src/app/model/channel.model';
+import { CommonService } from 'src/app/services/common.service';
 import { TelegramService } from 'src/app/services/telegram.service';
 
 @Component({
@@ -19,7 +20,8 @@ export class AddSuperChannelComponent {
   constructor(private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private services : TelegramService) {
+    private services : TelegramService,
+    private common : CommonService) {
 
   }
 
@@ -52,16 +54,41 @@ export class AddSuperChannelComponent {
         },1000);
         return;
       }
-      const result = await this.services.createSuperGroup(model).toPromise();
-      this.message = "Group saved successfully!";
-      setTimeout(async () => {
-        this.message = "";
-        this.router.navigate(['channel']);
-      },1000);
-      
+      const result = await this.services.createSuperGroup(model).subscribe(x=>{
+        this.message = x.message;
+        if(x.success){
+          setTimeout(async () => {
+            this.message = "";
+            //this.router.navigate(['channel']);
+            this.common.chlist.push({
+              isActive : 'true',
+              id: x.data.channelId,
+              title : this.f['title'].value,
+              photo: null,
+              type:'group',
+              noofuser : 1,
+              IsRequestJoin : false,
+              RequestCount : 0
+            });
+          },1000);
+        }else{
+          setTimeout(async () => {
+            this.message = "";
+          },1000);
+        }
+      },err=>{
+        this.message = err.message;
+          setTimeout(async () => {
+            this.message = "";
+            //this.router.navigate(['channel']);
+          },1000);
+      });
     }
     catch (ex) {
-      console.log(ex);
+      this.message = ex.message;
+      setTimeout(async () => {
+        this.message = "";
+      },1000);
     }
   }
 }

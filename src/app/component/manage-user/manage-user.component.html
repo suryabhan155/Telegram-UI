@@ -7,6 +7,7 @@
                 <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                     <ul class="breadcrumb pt-0" style="font-size: 15px;">
                         <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/channel">Channel</a></li>
                         <li class="breadcrumb-item"><a routerLink="/users">User</a></li>
                     </ul>
                 </nav>
@@ -22,6 +23,7 @@
                     <button type="button" class="btn btn-primary mb-2" style="float: right;"
                         (click)="AddUser(id)">Add User</button>
                 </div>
+                <div *ngIf="message" class="alert alert-success mt-3 mb-0">{{message}}</div>
                 <div class="row">
                     <div class="col-lg-12 col-xs-12">
                         <table mat-table [dataSource]="dataSource">
@@ -44,21 +46,24 @@
                                     1) }}</td>
                             </ng-container>
                             <ng-container matColumnDef="Username">
-                                <th mat-header-cell *matHeaderCellDef width="30%"> Username</th>
-                                <td mat-cell *matCellDef="let element"> {{ element.username }} </td>
+                                <th mat-header-cell *matHeaderCellDef width="20%"> Username</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.user.username }} </td>
                             </ng-container>
                             <ng-container matColumnDef="FirstName">
-                                <th mat-header-cell *matHeaderCellDef width="30%"> FirstName</th>
-                                <td mat-cell *matCellDef="let element"> {{ element.first_name }} </td>
+                                <th mat-header-cell *matHeaderCellDef width="20%"> FirstName</th>
+                                <td mat-cell *matCellDef="let element"> {{ element.user.first_name }} </td>
                             </ng-container>
                             <!-- <ng-container matColumnDef="IsActive">
                                 <th mat-header-cell *matHeaderCellDef width="10%"> IsActive</th>
                                 <td mat-cell *matCellDef="let element"> {{ element.IsActive }} </td>
                             </ng-container> -->
                             <ng-container matColumnDef="Action">
-                                <th mat-header-cell *matHeaderCellDef width="30%"> Action </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <a (click)="onDeleteSelected(element)" class="link">Delete</a>
+                                <th mat-header-cell *matHeaderCellDef width="50%"> Action </th>
+                                <td mat-cell *matCellDef="let element"> 
+                                    <button mat-stroked-button color="warn" class="mat-accent btn_inactive me-2" (click)="onDeleteSelected(element.user)">Remove User</button><span *ngIf="element.isRequest"> | </span>
+                                    <button *ngIf="element.isRequest" mat-stroked-button class="btn_active me-2" color="primary" (click)="AddtoChannel(element.user)">Add To Channel</button><span *ngIf="element.isRequest"> | </span>
+                                    <button *ngIf="element.isRequest" mat-stroked-button color="accent" class="btn_inactive" (click)="Dismiss(element.user)">Dismiss</button>
+                                    
                                 </td>
                             </ng-container>
 
@@ -70,7 +75,7 @@
 
                         <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
                             [showFirstLastButtons]="true" [length]="totalSize" [pageIndex]="currentPage"
-                            (page)="handlePage($event)" [hidden]="!userModel?.length">
+                            (page)="handlePage($event)" [hidden]="!RequestJoin?.length">
                         </mat-paginator>
                     </div>
                 </div>

@@ -11,11 +11,25 @@ export class DashboardComponent {
   constructor(private router : Router,private services : TelegramService) {
      }
 
-     cid:any;
+  message : any;
   noofchannel : Number;
   async ngOnInit(): Promise<void> {
-    var result = await this.services.chatcount().toPromise();
-    this.noofchannel = result;
+    await this.services.chatcount().subscribe(x=>{
+      if(x.success){
+        this.noofchannel = x.data;
+      }else{
+        this.message = x.message;
+        setTimeout(() => {
+          this.message = "";
+        }, 1000);
+      }
+    },err=>{
+      this.message = err.error;
+        setTimeout(() => {
+          this.message = "";
+        }, 2000);
+    });
+    
     // //project
     // var projectresult = await this.services.getProjectbyCId(this.cid).toPromise();
     // this.noofproject = projectresult.length;
